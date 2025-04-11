@@ -1,0 +1,12 @@
+[
+  {
+    "firstName": "Ethan",
+    "lastName": "Pletcher",
+    "email": "epletcher72@gmail.com",
+    "noTickets": 2,
+    "zip": 10016,
+    "dobMonth": "07",
+    "dobDay": "08",
+    "dobYear": "2000"
+  }
+]
