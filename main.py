@@ -8,17 +8,20 @@ async def is_lottery_open(page, url):
     try:
         await page.goto(url, timeout=60000)
         await page.wait_for_load_state('domcontentloaded')
-
-        # Use stealth
         await stealth_async(page)
 
-        # Try to detect form field (e.g., name input)
-        name_input = await page.query_selector('input[name="name"]')
-        return name_input is not None
+        # Check for the "Enter Now" button
+        enter_button = await page.query_selector('a.enter-lottery-link')
+        if enter_button:
+            form_url = await enter_button.get_attribute('href')
+            return form_url  # return the form URL instead of just True
+        else:
+            return None
 
     except Exception as e:
         print(f"Error checking {url}: {e}")
-        return False
+        return None
+
 
 
 async def main():
@@ -37,10 +40,10 @@ async def main():
             page = await context.new_page()
             print(f"Checking: {show['name']}...")
 
-            open_status = await is_lottery_open(page, show['url'])
+            form_url = await is_lottery_open(page, show['url'])
 
-            if open_status:
-                print(f" {show['name']} lottery is OPEN!")
+            if form_url:
+                print(f" {show['name']} Lottery is OPEN! Form link: {form_url}")
             else:
                 print(f" {show['name']} lottery is CLOSED.")
 
